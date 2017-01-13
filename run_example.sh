@@ -1,0 +1,5 @@
+#!/bin/bash
+OPENWEATHERMAP_API_KEY=key IDASH_GREEN_IPS=0.0.0.0,8.8.8.8 IDASH_WEATHER_REGION=Novosibirsk node index.js
+
+# DONT FORGET TO MAKE EXECUTABLE
+# USE chmod +x run.sh

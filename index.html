@@ -5,16 +5,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type="text/css">
-      .ip-info {
+      .ip-info,
+      .temperature-info {
         font-size: 2em;
         font-weight: 200;
+        margin-bottom: 1em;
       }
 
       body {
         font-family: sans-serif;
       }
 
-      div#ip {
+      #ip,
+      #temp {
         font-weight: bold;
         padding: .5em;
         margin-top: 0.2em;
@@ -25,74 +28,9 @@
     <div class="ip-info">
       Current IP: <div id="ip">fetching...</div>
     </div>
-    <script>
-      function requestIP(cb) {
-        var xmlhttp = new XMLHttpRequest();
-        var url = '/ip';
-
-        xmlhttp.onabort = function (e) {
-          var error = new Error('No connection');
-          cb(error);
-        };
-
-        xmlhttp.onreadystatechange = function() {
-          var ip, data, error;
-          if (this.readyState == 4 && this.status == 200) {
-            try {
-              data = JSON.parse(this.responseText);
-            } catch(err) {
-              cb(err);
-              return;
-            }
-            
-            if (data.error) {
-              error = new Error(data.error);
-              cb(error);
-              return;
-            }
-
-            cb(null, data.ip);
-          } else if (this.readyState == 4 && this.status == 0) {
-            error = new Error('No connection');
-            cb(error);
-          } else if (this.readyState == 4) {
-            error = new Error('XMLHttpRequest error');
-            cb(error);
-          }
-        };
-        xmlhttp.open("GET", url, true);
-        // ontimeout isn't working on old safari (6.1.6 ios)
-        // xmlhttp.timeout = 2000;
-        setTimeout(function() {
-          if (xmlhttp.readyState >0 && xmlhttp.readyState < 4) {
-            xmlhttp.abort();
-          }
-        }, 4000);
-        xmlhttp.send();
-      }
-
-      // =========================
-
-      var greenIPs = [
-
-      ];
-
-      setInterval(function() {
-        requestIP(function(err, ip) {
-          var el = document.getElementById('ip');
-          if (err && err.message == 'No connection') {
-            el.innerText = 'No connection';
-            el.style.backgroundColor = 'red';
-            return;
-          } else if (err) {
-            alert(err);
-            return;
-          }
-
-          el.innerText = ip;
-          el.style.backgroundColor = greenIPs.indexOf(ip) != -1 ? 'green' : 'red';
-        });
-      }, 5000);
-    </script>
+    <div class="temperature-info">
+      Current temperature: <div id="temp">fetching...</div>
+    </div>
+    <script src="/script.js"></script>
   </body>
 </html>
