@@ -62,6 +62,7 @@ function fetchIP() {
 function fetchWeatherForecast() {
   request('/wf', function(err, data) {
     var el = document.getElementById('temp');
+    var message = '';
     if (err && err.message == 'No connection') {
       el.innerText = 'No connection';
       return;
@@ -70,7 +71,16 @@ function fetchWeatherForecast() {
       return;
     }
 
-    el.innerText = data.main.temp;
+    message = data.main.temp;
+
+    if (data.weather.length) {
+      var iconId = data.weather[0].icon;
+      var iconUrl = 'http://openweathermap.org/img/w/' + iconId + '.png';
+      var img = '<img class="weather_icon" src="' + iconUrl + '"/>';
+      message = img + ' ' + message;
+    }
+
+    el.innerHTML = message;
   });
 }
 
